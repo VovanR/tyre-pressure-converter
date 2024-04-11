@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tyre Pressure Converter</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      margin: 0;
+      padding: 1em;
+    }
+
+    form {
+      font-size: 3rem;
+      display: flex;
+      gap: 0.5em;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    legend {
+      margin-bottom: 0.25em;
+      margin-left: -0.2em;
+    }
+
+    input {
+      text-align: right;
+      font: inherit;
+      width: 4em;
+    }
+
+    label {
+      display: inline-block;
+      width: 2em;
+    }
+
+    .copyright {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      opacity: 0.4;
+      font-family: monospace;
+      background-color: #fff;
+      transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 100%;
+      padding: 1em;
+      text-decoration: none;
+      color: #000;
+      white-space: nowrap;
+    }
+
+    .copyright:hover {
+      opacity: 1 !important;
+      text-decoration: none;
+    }
+
+    .copyright__license {}
+
+    .copyright__author {
+      display: none;
+      text-decoration: underline;
+    }
+
+    .copyright:hover .copyright__author {
+      display: inline-block;
+    }
+
+    .copyright {
+      border-right: 2px solid transparent;
+      border-bottom: 2px solid transparent;
+      background-clip: padding-box;
+      z-index: 10;
+    }
+  </style>
+</head>
+
+<body>
+  <form id="converter" action="">
+    <legend>Tyre Pressure Converter</legend>
+    <div>
+      <label for="bar">bar</label>
+      <input id="bar" name="bar" type="number" value="2.4" step="0.1" list="barValues" />
+      <datalist id="barValues">
+        <option value="2.4"></option>
+      </datalist>
+    </div>
+    <div>
+      <label for="psi"><abbr title="Pound per square inch">psi</abbr></label>
+      <input id="psi" name="psi" type="number" value="35.0" step="1" list="psiValues" />
+      <datalist id="psiValues">
+        <option value="35.0"></option>
+      </datalist>
+    </div>
+    <div>
+      <label for="kpa"><abbr title="Kilopascal">kPa</abbr></label>
+      <input id="kpa" name="kpa" type="number" value="240.0" step="10" list="kpaValues" />
+      <datalist id="kpaValues">
+        <option value="240.0"></option>
+      </datalist>
+    </div>
+  </form>
+
+  <a class="copyright" href="https://github.com/vovanr/tyre-pressure-converter" target="_blank"
+    rel="noopener noreferrer">
+    <span class="copyright__license">MIT ©</span> <span class="copyright__author">Vladimir Rodkin</span>
+  </a>
+
+  <script>
+    const form = document.forms.converter;
+
+    form.addEventListener("change", (event) => {
+      const { name, valueAsNumber } = event.target;
+      const values = convert(name, valueAsNumber);
+      form.querySelectorAll("input").forEach((input) => {
+        input.value = values[input.name];
+      })
+    });
+
+    function convert(name, value) {
+      const inOneBar = {
+        bar: 1,
+        psi: 14.5038,
+        kpa: 100,
+      };
+      const bar = value / inOneBar[name];
+      return {
+        bar: bar.toFixed(1),
+        psi: Math.round(bar * inOneBar.psi).toFixed(1),
+        kpa: Math.round(bar * inOneBar.kpa).toFixed(1),
+      }
+    }
+  </script>
+</body>
+
+</html>
